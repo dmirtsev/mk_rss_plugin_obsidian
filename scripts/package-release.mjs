@@ -26,6 +26,7 @@ const releaseFiles = [
   "main.js",
   "manifest.json",
   "README.md",
+  "README.ru.md",
   "LICENSE",
   "versions.json",
   "install-mk-import-rss.command",

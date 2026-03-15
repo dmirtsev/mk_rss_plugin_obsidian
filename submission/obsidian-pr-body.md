@@ -12,7 +12,7 @@ Adds `MK Import RSS` to the Obsidian community plugin directory.
 
 ## What the plugin does
 
-This plugin imports RSS feed items into Obsidian notes. It can fetch RSS from a URL, process XML files from an inbox folder, organize imported notes using folder and filename templates, and attach RSS metadata to the created notes.
+This plugin imports MK RSS feed items into Obsidian notes. It can fetch RSS from a URL, process XML files from an inbox folder, organize imported notes using folder and filename templates, and attach RSS metadata to the created notes.
 
 ## Checklist
 

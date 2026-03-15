@@ -1,95 +1,110 @@
 # MK Import RSS
 
-Плагин Obsidian для импорта элементов RSS-ленты в markdown-заметки.
+English | [Русский](README.ru.md)
 
-## Что делает плагин
+Obsidian plugin for importing MK RSS feed items into Markdown notes.
 
-- Загружает RSS по URL и превращает элементы ленты в заметки.
-- Может обрабатывать XML-файлы из inbox-папки внутри vault.
-- Создаёт папки и имена заметок по шаблонам.
-- Добавляет метаданные `mk_*` во frontmatter.
-- Может вставлять удалённые картинки или скачивать их в vault.
+## Features
 
-## Как установить сейчас
+- Fetches RSS from a URL and turns feed items into notes.
+- Can process XML files from an inbox folder inside the vault.
+- Organizes imported notes with folder and filename templates.
+- Adds `mk_*` metadata to note frontmatter.
+- Can embed remote images or download them into the vault.
 
-### Самый простой вариант для macOS
+## Installation
 
-1. Скачайте zip-архив релиза из GitHub Releases.
-2. Распакуйте архив.
-3. Откройте папку `mk-import-rss`.
-4. Дважды кликните `install-mk-import-rss.command`.
-5. Когда Finder попросит, выберите папку вашего vault Obsidian.
-6. В Obsidian откройте `Settings -> Community plugins`.
-7. Если community plugins ещё выключены, включите их.
-8. Включите плагин `MK Import RSS` в списке установленных.
+### Best end-user flow
 
-Если macOS блокирует запуск, нажмите правой кнопкой по файлу и выберите `Open`.
+After the plugin is accepted into the official Obsidian Community Plugins directory, users will be able to:
 
-### Самый простой вариант для Windows
+1. Open `Settings -> Community plugins`.
+2. Search for `MK Import RSS`.
+3. Click `Install`.
+4. Enable the plugin.
 
-1. Скачайте zip-архив релиза из GitHub Releases.
-2. Распакуйте архив.
-3. Откройте папку `mk-import-rss`.
-4. Кликните правой кнопкой по `install-mk-import-rss.ps1`.
-5. Выберите `Run with PowerShell`.
-6. Выберите папку вашего vault Obsidian в открывшемся диалоге.
-7. В Obsidian откройте `Settings -> Community plugins`.
-8. Если community plugins ещё выключены, включите их.
-9. Включите плагин `MK Import RSS` в списке установленных.
+You can also share this deep link after publication:
 
-Если PowerShell блокирует запуск, откройте PowerShell от имени текущего пользователя и выполните:
+```text
+obsidian://show-plugin?id=mk-import-rss
+```
+
+### Current pre-release install
+
+Until the plugin is published in the official directory, the simplest path is a GitHub Release zip.
+
+#### macOS
+
+1. Download the release zip from GitHub Releases.
+2. Extract it.
+3. Open the `mk-import-rss` folder.
+4. Double-click `install-mk-import-rss.command`.
+5. Select your Obsidian vault when Finder prompts you.
+6. Enable `MK Import RSS` in `Settings -> Community plugins`.
+
+If macOS blocks the script, right-click it and choose `Open`.
+
+#### Windows
+
+1. Download the release zip from GitHub Releases.
+2. Extract it.
+3. Open the `mk-import-rss` folder.
+4. Right-click `install-mk-import-rss.ps1`.
+5. Choose `Run with PowerShell`.
+6. Select your Obsidian vault in the folder dialog.
+7. Enable `MK Import RSS` in `Settings -> Community plugins`.
+
+If PowerShell blocks execution, run:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\install-mk-import-rss.ps1
 ```
 
-### Ручная установка
+#### Manual install
 
-1. Соберите проект или возьмите из релиза эти файлы:
-   - `manifest.json`
-   - `main.js`
-2. Откройте папку вашего vault.
-3. Создайте папку:
+Copy these files into your vault:
 
 ```text
 .obsidian/plugins/mk-import-rss/
 ```
 
-4. Скопируйте `manifest.json` и `main.js` в эту папку.
-5. Перезапустите Obsidian или перезагрузите community plugins.
-6. Включите `MK Import RSS` в `Settings -> Community plugins`.
+Required files:
 
-## Как собрать из исходников
+- `manifest.json`
+- `main.js`
+
+Then restart Obsidian or reload community plugins and enable `MK Import RSS`.
+
+## Development
 
 ```bash
-npm install
+npm ci
+npm run check
 npm run build
 ```
 
-На выходе будут:
+Build output:
 
 - `main.js`
 - `manifest.json`
 
-## Как подготовить zip-релиз
+## Packaging
 
 ```bash
 npm run package
 ```
 
-Будут созданы:
+This creates:
 
 - `release/mk-import-rss/`
 - `release/mk-import-rss-0.1.0.zip`
 
-Внутри релизной папки лежат файлы плагина, установщик, лицензия и инструкция.
+## Release flow
 
-## Профессиональный release flow
+This repository is configured for automated GitHub Releases.
 
-Если репозиторий лежит на GitHub, дальше можно выпускать релизы без ручной загрузки assets:
-
-1. Обновить `manifest.json` и `versions.json`.
-2. Проверить проект локально:
+1. Update `manifest.json` and `versions.json`.
+2. Verify locally:
 
 ```bash
 npm ci
@@ -97,49 +112,31 @@ npm run check
 npm run package
 ```
 
-3. Создать и отправить тег версии, который в точности совпадает с `manifest.json.version`:
+3. Create and push a tag that exactly matches `manifest.json.version`:
 
 ```bash
 git tag 0.1.0
 git push origin 0.1.0
 ```
 
-После этого GitHub Actions сам:
+GitHub Actions will then:
 
-- проверит TypeScript и сборку
-- соберёт release assets
-- создаст GitHub Release
-- прикрепит `main.js`, `manifest.json` и zip-архив
+- run type checking
+- build the plugin
+- create a GitHub Release
+- attach `main.js`, `manifest.json`, optional `styles.css`, and the release zip
 
-## Как сделать установку одной кнопкой
+## Migration note
 
-### Лучший официальный вариант
+This plugin previously used the id `prefix-organizer`. The current id is `mk-import-rss`.
 
-После публикации плагина в официальном каталоге community plugins Obsidian можно давать пользователям такую ссылку:
-
-```text
-obsidian://show-plugin?id=mk-import-rss
-```
-
-Эта ссылка открывает страницу плагина прямо в Obsidian. Для обычного пользователя это самый понятный сценарий "в одну кнопку".
-
-### Пока плагин ещё не опубликован
-
-Самый простой сценарий сейчас: давать пользователю zip-релиз с файлами `install-mk-import-rss.command` для macOS и `install-mk-import-rss.ps1` для Windows.
-
-Если репозиторий будет опубликован на GitHub и нужен удобный способ раздавать бета-версии по URL, обычно используют BRAT. Это не официальный способ установки Obsidian, но он удобен для тестирования неопубликованных плагинов.
-
-## Важно для обновления старой версии
-
-Раньше у плагина был id `prefix-organizer`. Сейчас используется `mk-import-rss`.
-
-Если где-то уже стояла старая локальная версия, сначала удалите старую папку:
+If an older local build is still installed, remove:
 
 ```text
 .obsidian/plugins/prefix-organizer/
 ```
 
-Потом установите новую версию в:
+Then install:
 
 ```text
 .obsidian/plugins/mk-import-rss/
