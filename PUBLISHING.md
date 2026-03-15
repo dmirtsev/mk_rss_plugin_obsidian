@@ -19,9 +19,9 @@
 - [ ] Проверить, что `version` в `manifest.json` имеет формат `x.y.z`.
 - [ ] Проверить, что `README.md` описывает назначение плагина и способ использования.
 - [ ] Собрать релиз командой `npm run package`.
-- [ ] Создать GitHub Release с тегом, который в точности совпадает с `manifest.json.version`.
-- [ ] Прикрепить к GitHub Release файлы `main.js` и `manifest.json`.
-- [ ] При наличии `styles.css` прикрепить и его.
+- [ ] Создать git tag, который в точности совпадает с `manifest.json.version`.
+- [ ] Отправить tag в GitHub.
+- [ ] Дождаться GitHub Actions workflow `Release`.
 - [ ] Форкнуть `obsidianmd/obsidian-releases`.
 - [ ] Добавить запись о плагине в конец `community-plugins.json`.
 - [ ] Открыть PR с типом `Community Plugin`.
@@ -30,6 +30,7 @@
 
 ```bash
 npm install
+npm run check
 npm run package
 ```
 
@@ -40,19 +41,27 @@ npm run package
 
 ## GitHub Release
 
-Для первой публикации нужны assets:
+Релизный workflow сам создаёт GitHub Release и прикладывает assets:
 
 - `main.js`
 - `manifest.json`
 - `styles.css` если файл существует
+- zip-архив релиза
 
-Тег релиза должен быть ровно таким же, как версия в `manifest.json`.
+Тег должен быть ровно таким же, как версия в `manifest.json`.
 
 Пример:
 
 - `manifest.json` -> `"version": "0.1.0"`
 - Git tag -> `0.1.0`
 - GitHub Release -> `0.1.0`
+
+Команды:
+
+```bash
+git tag 0.1.0
+git push origin 0.1.0
+```
 
 ## Что вставить в community-plugins.json
 

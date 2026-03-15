@@ -5,6 +5,7 @@
   "main": "main.js",
   "scripts": {
     "dev": "node esbuild.config.mjs dev",
+    "check": "tsc --noEmit",
     "build": "node esbuild.config.mjs production",
     "package": "node scripts/package-release.mjs"
   },
@@ -12,7 +13,11 @@
     "obsidian",
     "plugin"
   ],
-  "author": "",
+  "author": "dmirtsev",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dmirtsev/mk_rss_plugin_obsidian.git"
+  },
   "license": "MIT",
   "devDependencies": {
     "esbuild": "^0.19.11",

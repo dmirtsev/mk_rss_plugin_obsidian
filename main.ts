@@ -104,7 +104,7 @@ interface RssStats {
 }
 
 export default class MkImportRssPlugin extends Plugin {
-  settings: PluginSettings;
+  settings!: PluginSettings;
   private rssScheduleId: number | null = null;
   private rssRunning = false;
   private rssProcessing = new Set<string>();
@@ -598,7 +598,7 @@ export default class MkImportRssPlugin extends Plugin {
     return urls;
   }
 
-  private getElementText(parent: ParentNode, tag: string): string {
+  private getElementText(parent: Element, tag: string): string {
     const element = parent.getElementsByTagName(tag)[0];
     if (!element || element.textContent === null) {
       return "";
@@ -606,10 +606,8 @@ export default class MkImportRssPlugin extends Plugin {
     return element.textContent.replace(/\r\n/g, "\n").trim();
   }
 
-  private extractMediaUrls(parent: ParentNode): string[] {
-    const mediaElements = Array.from(
-      parent.getElementsByTagName("media:content")
-    );
+  private extractMediaUrls(parent: Element): string[] {
+    const mediaElements = Array.from(parent.getElementsByTagName("media:content"));
     const urls: string[] = [];
 
     for (const media of mediaElements) {
@@ -954,7 +952,7 @@ export default class MkImportRssPlugin extends Plugin {
         skipIndented = false;
       }
 
-      const trimmed = line.trimStart();
+      const trimmed = line.replace(/^\s+/, "");
       if (trimmed.startsWith("mk_")) {
         if (/^mk_[^:]+:\s*$/.test(trimmed)) {
           skipIndented = true;
@@ -1457,8 +1455,8 @@ class MkImportRssSettingTab extends PluginSettingTab {
           .addOption("overwrite", "Overwrite")
           .addOption("append", "Append")
           .setValue(this.plugin.settings.rssUpdateMode)
-          .onChange(async (value: UpdateMode) => {
-            this.plugin.settings.rssUpdateMode = value;
+          .onChange(async (value) => {
+            this.plugin.settings.rssUpdateMode = value as UpdateMode;
             await this.plugin.saveSettings();
           })
       );
@@ -1496,8 +1494,8 @@ class MkImportRssSettingTab extends PluginSettingTab {
           .addOption("remote", "Embed remote URLs")
           .addOption("download", "Download to vault")
           .setValue(this.plugin.settings.rssImageMode)
-          .onChange(async (value: ImageMode) => {
-            this.plugin.settings.rssImageMode = value;
+          .onChange(async (value) => {
+            this.plugin.settings.rssImageMode = value as ImageMode;
             await this.plugin.saveSettings();
           })
       );

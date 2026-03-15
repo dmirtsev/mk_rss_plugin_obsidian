@@ -1,0 +1,82 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "*.*.*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Validate tag against manifest version
+        id: meta
+        shell: bash
+        run: |
+          set -euo pipefail
+          TAG="${GITHUB_REF_NAME}"
+          VERSION="$(node -p "require('./manifest.json').version")"
+          PLUGIN_ID="$(node -p "require('./manifest.json').id")"
+
+          if [[ ! "${TAG}" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "::error::Release tag must use plain semantic version, for example 0.1.0"
+            exit 1
+          fi
+
+          if [[ "${TAG}" != "${VERSION}" ]]; then
+            echo "::error::Tag ${TAG} does not match manifest version ${VERSION}"
+            exit 1
+          fi
+
+          echo "version=${VERSION}" >> "${GITHUB_OUTPUT}"
+          echo "plugin_id=${PLUGIN_ID}" >> "${GITHUB_OUTPUT}"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Type check
+        run: npm run check
+
+      - name: Build release package
+        run: npm run package
+
+      - name: Prepare asset list
+        id: assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          STAGE_DIR="release/${{ steps.meta.outputs.plugin_id }}"
+          ZIP_FILE="release/${{ steps.meta.outputs.plugin_id }}-${{ steps.meta.outputs.version }}.zip"
+
+          {
+            echo "files<<EOF"
+            echo "${STAGE_DIR}/main.js"
+            echo "${STAGE_DIR}/manifest.json"
+            if [[ -f "${STAGE_DIR}/styles.css" ]]; then
+              echo "${STAGE_DIR}/styles.css"
+            fi
+            echo "${ZIP_FILE}"
+            echo "EOF"
+          } >> "${GITHUB_OUTPUT}"
+
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.meta.outputs.version }}
+          name: ${{ steps.meta.outputs.version }}
+          generate_release_notes: true
+          fail_on_unmatched_files: true
+          files: ${{ steps.assets.outputs.files }}

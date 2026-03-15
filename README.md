@@ -84,6 +84,33 @@ npm run package
 
 Внутри релизной папки лежат файлы плагина, установщик, лицензия и инструкция.
 
+## Профессиональный release flow
+
+Если репозиторий лежит на GitHub, дальше можно выпускать релизы без ручной загрузки assets:
+
+1. Обновить `manifest.json` и `versions.json`.
+2. Проверить проект локально:
+
+```bash
+npm ci
+npm run check
+npm run package
+```
+
+3. Создать и отправить тег версии, который в точности совпадает с `manifest.json.version`:
+
+```bash
+git tag 0.1.0
+git push origin 0.1.0
+```
+
+После этого GitHub Actions сам:
+
+- проверит TypeScript и сборку
+- соберёт release assets
+- создаст GitHub Release
+- прикрепит `main.js`, `manifest.json` и zip-архив
+
 ## Как сделать установку одной кнопкой
 
 ### Лучший официальный вариант
