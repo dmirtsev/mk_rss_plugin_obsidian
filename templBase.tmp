@@ -1,0 +1,89 @@
+<%*
+const srcFolder = "tmpMK"; // <- ОТСЮДА берём заметки
+const rootFolder = "000 Метавселенная Клиента"; // <- СЮДА создаём подпапки и переносим
+const logFilePath = rootFolder + "/log.md";
+
+let total = 0, moved = 0, skipped = 0, errors = 0, createdFolders = 0;
+
+// лог в файл
+async function writeLog(message) {
+  const timestamp = moment().format("YYYY-MM-DD HH:mm:ss");
+  const line = "\n- [" + timestamp + "] " + message;
+  const logFile = app.vault.getAbstractFileByPath(logFilePath);
+  if (!logFile) {
+    await app.vault.create(logFilePath, "# Лог перемещений" + line);
+  } else {
+    const content = await app.vault.read(logFile);
+    await app.vault.modify(logFile, content + line);
+  }
+}
+
+try {
+  const src = app.vault.getAbstractFileByPath(srcFolder);
+  if (!src || !src.children) {
+    const msg = "ОШИБКА: Папка-источник «" + srcFolder + "» не найдена или это не папка";
+    new Notice(msg); console.error(msg); await writeLog(msg); return;
+  }
+
+  const root = app.vault.getAbstractFileByPath(rootFolder);
+  if (!root || !root.children) {
+    const msg = "ОШИБКА: Целевая папка «" + rootFolder + "» не найдена или это не папка";
+    new Notice(msg); console.error(msg); await writeLog(msg); return;
+  }
+
+  // берём только md-файлы ИЗ ПРЯМЫХ детей srcFolder
+  const children = src.children;
+  const files = children
+    .filter(f => f && f.extension === "md")
+    .filter(f => f.path !== logFilePath); // на всякий случай
+
+  for (let i = 0; i < files.length; i++) {
+    const file = files[i]; total++;
+    const fileName = file.name.replace(/\.md$/i, "");
+    const parts = fileName.split("-");
+    const folderName = parts[0] ? parts[0].trim() : "";
+
+    if (!folderName) {
+      const msg = "Пропущено: «" + file.name + "» — нет префикса до \"-\"";
+      new Notice(msg); console.warn(msg); await writeLog(msg); skipped++; continue;
+    }
+
+    const targetFolderPath = rootFolder + "/" + folderName;
+
+    let targetFolder = app.vault.getAbstractFileByPath(targetFolderPath);
+    if (!targetFolder) {
+      try {
+        targetFolder = await app.vault.createFolder(targetFolderPath);
+        await writeLog("Создана папка: " + targetFolderPath);
+        createdFolders++;
+      } catch (e) {
+        const msg = "ОШИБКА: не удалось создать «" + targetFolderPath + "»";
+        new Notice(msg); console.error(msg, e);
+        await writeLog(msg + " → " + (e && e.message ? e.message : e)); errors++; continue;
+      }
+    }
+
+    const destPath = targetFolderPath + "/" + file.name;
+
+    if (file.path === destPath) { skipped++; continue; }
+
+    try {
+      await app.fileManager.renameFile(file, destPath);
+      const msg = "Перемещено: «" + file.name + "» → «" + targetFolderPath + "»";
+      new Notice(msg); console.log(msg); await writeLog(msg); moved++;
+    } catch (e) {
+      const msg = "ОШИБКА: «" + file.name + "» не перемещён!";
+      new Notice(msg); console.error(msg, e);
+      await writeLog(msg + " → " + (e && e.message ? e.message : e)); errors++;
+    }
+  }
+
+  const summary = "ИТОГО: файлов=" + total + ", перемещено=" + moved + ", создано папок=" + createdFolders + ", пропущено=" + skipped + ", ошибок=" + errors;
+  new Notice(summary); console.log(summary); await writeLog(summary);
+
+} catch (e) {
+  const msg = "КРИТИЧЕСКАЯ ОШИБКА парсинга/выполнения";
+  new Notice(msg); console.error(msg, e);
+  try { await writeLog(msg + " → " + (e && e.message ? e.message : e)); } catch (_) {}
+}
+%>
