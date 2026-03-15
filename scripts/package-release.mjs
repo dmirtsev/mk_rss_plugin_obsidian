@@ -28,7 +28,8 @@ const releaseFiles = [
   "README.md",
   "LICENSE",
   "versions.json",
-  "install-mk-import-rss.command"
+  "install-mk-import-rss.command",
+  "install-mk-import-rss.ps1"
 ];
 
 execFileSync("npm", ["run", "build"], {

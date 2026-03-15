@@ -25,6 +25,24 @@
 
 Если macOS блокирует запуск, нажмите правой кнопкой по файлу и выберите `Open`.
 
+### Самый простой вариант для Windows
+
+1. Скачайте zip-архив релиза из GitHub Releases.
+2. Распакуйте архив.
+3. Откройте папку `mk-import-rss`.
+4. Кликните правой кнопкой по `install-mk-import-rss.ps1`.
+5. Выберите `Run with PowerShell`.
+6. Выберите папку вашего vault Obsidian в открывшемся диалоге.
+7. В Obsidian откройте `Settings -> Community plugins`.
+8. Если community plugins ещё выключены, включите их.
+9. Включите плагин `MK Import RSS` в списке установленных.
+
+Если PowerShell блокирует запуск, откройте PowerShell от имени текущего пользователя и выполните:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\install-mk-import-rss.ps1
+```
+
 ### Ручная установка
 
 1. Соберите проект или возьмите из релиза эти файлы:
@@ -80,7 +98,7 @@ obsidian://show-plugin?id=mk-import-rss
 
 ### Пока плагин ещё не опубликован
 
-Самый простой сценарий сейчас: давать пользователю zip-релиз с файлом `install-mk-import-rss.command`.
+Самый простой сценарий сейчас: давать пользователю zip-релиз с файлами `install-mk-import-rss.command` для macOS и `install-mk-import-rss.ps1` для Windows.
 
 Если репозиторий будет опубликован на GitHub и нужен удобный способ раздавать бета-версии по URL, обычно используют BRAT. Это не официальный способ установки Obsidian, но он удобен для тестирования неопубликованных плагинов.
 
