@@ -1,32 +1,28 @@
-## Summary
+# I am submitting a new Community Plugin
 
-Adds `MK Import RSS` to the Obsidian community plugin directory.
+- [x] I attest that I have done my best to deliver a high-quality plugin, am proud of the code I have written, and would recommend it to others. I commit to maintaining the plugin and being responsive to bug reports. If I am no longer able to maintain it, I will make reasonable efforts to find a successor maintainer or withdraw the plugin from the directory.
 
-## Plugin information
+## Repo URL
 
-- Plugin name: `MK Import RSS`
-- Plugin id: `mk-import-rss`
-- Author: `dmirtsev`
-- Repository: `https://github.com/dmirtsev/mk_rss_plugin_obsidian`
-- Release version: `0.1.0`
+Link to my plugin:
+https://github.com/dmirtsev/mk_rss_plugin_obsidian
 
-## What the plugin does
-
-This plugin imports MK RSS feed items into Obsidian notes. It can fetch RSS from a URL, process XML files from an inbox folder, organize imported notes using folder and filename templates, and attach RSS metadata to the created notes.
-
-## Checklist
-
-- [x] I have read the developer documentation for submitting plugins.
-- [x] I have read the plugin submission requirements and developer policies.
-- [x] This plugin has a valid `manifest.json` in the root of the repository.
-- [x] This plugin has a `README.md` in the root of the repository.
-- [x] This plugin has a `LICENSE` in the root of the repository.
-- [x] I have created a GitHub Release whose tag exactly matches the version in `manifest.json`.
-- [x] The GitHub Release includes `main.js` and `manifest.json` as assets.
-- [x] The plugin id is unique and does not contain the word `obsidian`.
-- [x] I added the plugin entry to the end of `community-plugins.json`.
-
-## Notes
-
-- Repository path is set to `dmirtsev/mk_rss_plugin_obsidian`.
-- If `styles.css` is added later, it will also be attached to future releases.
+## Release Checklist
+- [ ] I have tested the plugin on
+  - [ ] Windows
+  - [x] macOS
+  - [ ] Linux
+  - [ ] Android _(if applicable)_
+  - [ ] iOS _(if applicable)_
+- [x] My GitHub release contains all required files (as individual files, not just in the source.zip / source.tar.gz)
+  - [x] `main.js`
+  - [x] `manifest.json`
+  - [ ] `styles.css` _(optional)_
+- [x] GitHub release name matches the exact version number specified in my manifest.json (_**Note:** Use the exact version number, don't include a prefix `v`_)
+- [x] The `id` in my `manifest.json` matches the `id` in the `community-plugins.json` file.
+- [x] My README.md describes the plugin's purpose and provides clear usage instructions.
+- [x] I have read the developer policies at https://docs.obsidian.md/Developer+policies, and have assessed my plugin's adherence to these policies.
+- [x] I have read the tips in https://docs.obsidian.md/Plugins/Releasing/Plugin+guidelines and have self-reviewed my plugin to avoid these common pitfalls.
+- [x] I have added a license in the LICENSE file.
+- [x] My project respects and is compatible with the original license of any code from other plugins that I'm using.
+      I have given proper attribution to these other projects in my `README.md`.

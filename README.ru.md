@@ -92,7 +92,7 @@ npm run package
 Будут созданы:
 
 - `release/mk-import-rss/`
-- `release/mk-import-rss-0.1.0.zip`
+- `release/mk-import-rss-0.1.1.zip`
 
 ## Release flow
 
@@ -110,8 +110,8 @@ npm run package
 3. Создайте и отправьте тег, который точно совпадает с версией в `manifest.json`:
 
 ```bash
-git tag 0.1.0
-git push origin 0.1.0
+git tag 0.1.1
+git push origin 0.1.1
 ```
 
 После этого GitHub Actions автоматически:

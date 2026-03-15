@@ -1,7 +1,7 @@
 {
   "name": "mk-import-rss",
-  "version": "0.1.0",
-  "description": "Import MK RSS feed items into Obsidian notes.",
+  "version": "0.1.1",
+  "description": "Import MK RSS feed items into notes.",
   "main": "main.js",
   "scripts": {
     "dev": "node esbuild.config.mjs dev",

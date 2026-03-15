@@ -52,15 +52,15 @@ The tag must exactly match the version in `manifest.json`.
 
 Example:
 
-- `manifest.json` -> `"version": "0.1.0"`
-- git tag -> `0.1.0`
-- GitHub Release -> `0.1.0`
+- `manifest.json` -> `"version": "0.1.1"`
+- git tag -> `0.1.1`
+- GitHub Release -> `0.1.1`
 
 Commands:
 
 ```bash
-git tag 0.1.0
-git push origin 0.1.0
+git tag 0.1.1
+git push origin 0.1.1
 ```
 
 ## community-plugins.json entry
