@@ -1359,7 +1359,7 @@ class MkImportRssSettingTab extends PluginSettingTab {
       .setDesc("Vault path to the log file.")
       .addText((text) =>
         text
-          .setPlaceholder("log.md")
+          .setPlaceholder("Example: log.md")
           .setValue(this.plugin.settings.logFilePath)
           .onChange(async (value) => {
             this.plugin.settings.logFilePath = value.trim();
@@ -1403,7 +1403,7 @@ class MkImportRssSettingTab extends PluginSettingTab {
       .setDesc("Store last RSS response XML for debugging.")
       .addText((text) =>
         text
-          .setPlaceholder("rss-last.xml")
+          .setPlaceholder("Example: rss-last.xml")
           .setValue(this.plugin.settings.rssLastResponsePath)
           .onChange(async (value) => {
             this.plugin.settings.rssLastResponsePath = value.trim();
@@ -1416,7 +1416,7 @@ class MkImportRssSettingTab extends PluginSettingTab {
       .setDesc("Base folder for imported notes.")
       .addText((text) =>
         text
-          .setPlaceholder("000 Metaverse")
+          .setPlaceholder("Example: 000 Metaverse")
           .setValue(this.plugin.settings.rssRootFolder)
           .onChange(async (value) => {
             this.plugin.settings.rssRootFolder = value.trim();
@@ -1456,10 +1456,10 @@ class MkImportRssSettingTab extends PluginSettingTab {
 
     new Setting(containerEl)
       .setName("Missing group folder")
-      .setDesc("Fallback folder name when no P[group] code is found.")
+      .setDesc("Fallback folder name when no group code is found.")
       .addText((text) =>
         text
-          .setPlaceholder("misc")
+          .setPlaceholder("Example: misc")
           .setValue(this.plugin.settings.rssMissingGroupFolder)
           .onChange(async (value) => {
             this.plugin.settings.rssMissingGroupFolder = value.trim() || "misc";
@@ -1512,7 +1512,7 @@ class MkImportRssSettingTab extends PluginSettingTab {
       .addDropdown((dropdown) =>
         dropdown
           .addOption("off", "Off")
-          .addOption("remote", "Embed remote URLs")
+          .addOption("remote", "Embed remote links")
           .addOption("download", "Download to vault")
           .setValue(this.plugin.settings.rssImageMode)
           .onChange(async (value) => {
@@ -1553,7 +1553,7 @@ class MkImportRssSettingTab extends PluginSettingTab {
       .setDesc("Used when image handling is set to download to vault.")
       .addText((text) =>
         text
-          .setPlaceholder("assets/rss")
+          .setPlaceholder("Example: assets/rss")
           .setValue(this.plugin.settings.rssAssetsFolder)
           .onChange(async (value) => {
             this.plugin.settings.rssAssetsFolder = value.trim();
@@ -1620,7 +1620,7 @@ class MkImportRssSettingTab extends PluginSettingTab {
       .setDesc("Folder to watch for XML files (no recursion).")
       .addText((text) =>
         text
-          .setPlaceholder("tmpMK/rss-inbox")
+          .setPlaceholder("Example: tmpMK/rss-inbox")
           .setValue(this.plugin.settings.rssWatchFolder)
           .onChange(async (value) => {
             this.plugin.settings.rssWatchFolder = value.trim();
@@ -1633,7 +1633,7 @@ class MkImportRssSettingTab extends PluginSettingTab {
       .setDesc("Where to move XML files after processing.")
       .addText((text) =>
         text
-          .setPlaceholder("tmpMK/rss-processed")
+          .setPlaceholder("Example: tmpMK/rss-processed")
           .setValue(this.plugin.settings.rssProcessedFolder)
           .onChange(async (value) => {
             this.plugin.settings.rssProcessedFolder = value.trim();
