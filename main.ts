@@ -1403,7 +1403,7 @@ class MkImportRssSettingTab extends PluginSettingTab {
       .setDesc("Store last RSS response XML for debugging.")
       .addText((text) =>
         text
-          .setPlaceholder("Example: rss-last.xml")
+          .setPlaceholder("Path to the last RSS response file")
           .setValue(this.plugin.settings.rssLastResponsePath)
           .onChange(async (value) => {
             this.plugin.settings.rssLastResponsePath = value.trim();
@@ -1416,7 +1416,7 @@ class MkImportRssSettingTab extends PluginSettingTab {
       .setDesc("Base folder for imported notes.")
       .addText((text) =>
         text
-          .setPlaceholder("Example: 000 Metaverse")
+          .setPlaceholder("Path to the root import folder")
           .setValue(this.plugin.settings.rssRootFolder)
           .onChange(async (value) => {
             this.plugin.settings.rssRootFolder = value.trim();
@@ -1553,7 +1553,7 @@ class MkImportRssSettingTab extends PluginSettingTab {
       .setDesc("Used when image handling is set to download to vault.")
       .addText((text) =>
         text
-          .setPlaceholder("Example: assets/rss")
+          .setPlaceholder("Path to the assets folder")
           .setValue(this.plugin.settings.rssAssetsFolder)
           .onChange(async (value) => {
             this.plugin.settings.rssAssetsFolder = value.trim();
@@ -1620,7 +1620,7 @@ class MkImportRssSettingTab extends PluginSettingTab {
       .setDesc("Folder to watch for XML files (no recursion).")
       .addText((text) =>
         text
-          .setPlaceholder("Example: tmpMK/rss-inbox")
+          .setPlaceholder("Path to the inbox folder")
           .setValue(this.plugin.settings.rssWatchFolder)
           .onChange(async (value) => {
             this.plugin.settings.rssWatchFolder = value.trim();
@@ -1633,7 +1633,7 @@ class MkImportRssSettingTab extends PluginSettingTab {
       .setDesc("Where to move XML files after processing.")
       .addText((text) =>
         text
-          .setPlaceholder("Example: tmpMK/rss-processed")
+          .setPlaceholder("Path to the processed folder")
           .setValue(this.plugin.settings.rssProcessedFolder)
           .onChange(async (value) => {
             this.plugin.settings.rssProcessedFolder = value.trim();
