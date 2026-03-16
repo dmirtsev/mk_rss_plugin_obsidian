@@ -52,15 +52,15 @@ npm run package
 
 Пример:
 
-- `manifest.json` -> `"version": "0.1.1"`
-- git tag -> `0.1.1`
-- GitHub Release -> `0.1.1`
+- `manifest.json` -> `"version": "0.1.2"`
+- git tag -> `0.1.2`
+- GitHub Release -> `0.1.2`
 
 Команды:
 
 ```bash
-git tag 0.1.1
-git push origin 0.1.1
+git tag 0.1.2
+git push origin 0.1.2
 ```
 
 ## Что вставить в community-plugins.json

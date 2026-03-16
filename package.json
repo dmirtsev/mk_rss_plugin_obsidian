@@ -1,6 +1,6 @@
 {
   "name": "mk-import-rss",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Import MK RSS feed items into notes.",
   "main": "main.js",
   "scripts": {

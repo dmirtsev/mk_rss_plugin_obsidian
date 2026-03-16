@@ -97,7 +97,7 @@ npm run package
 This creates:
 
 - `release/mk-import-rss/`
-- `release/mk-import-rss-0.1.1.zip`
+- `release/mk-import-rss-0.1.2.zip`
 
 ## Release flow
 
@@ -115,8 +115,8 @@ npm run package
 3. Create and push a tag that exactly matches `manifest.json.version`:
 
 ```bash
-git tag 0.1.1
-git push origin 0.1.1
+git tag 0.1.2
+git push origin 0.1.2
 ```
 
 GitHub Actions will then:

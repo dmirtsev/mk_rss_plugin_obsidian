@@ -115,23 +115,23 @@ export default class MkImportRssPlugin extends Plugin {
     await this.loadSettings();
 
     this.addCommand({
-      id: "mk-import-rss-pull",
-      name: "Import RSS now",
+      id: "import-now",
+      name: "Import now",
       callback: () => {
-        this.runRssPull("manual");
+        void this.runRssPull("manual");
       }
     });
 
     this.addCommand({
-      id: "mk-import-rss-inbox",
-      name: "Process RSS inbox now",
+      id: "process-inbox-now",
+      name: "Process inbox now",
       callback: () => {
-        this.runRssInbox("manual");
+        void this.runRssInbox("manual");
       }
     });
 
-    this.addRibbonIcon("rss", "Import RSS now", () => {
-      this.runRssPull("manual");
+    this.addRibbonIcon("rss", "Import now", () => {
+      void this.runRssPull("manual");
     });
 
     this.addSettingTab(new MkImportRssSettingTab(this.app, this));
@@ -140,13 +140,13 @@ export default class MkImportRssPlugin extends Plugin {
 
     this.registerEvent(
       this.app.vault.on("create", (file) => {
-        this.handleRssWatchCreate(file);
+        void this.handleRssWatchCreate(file);
       })
     );
 
     if (this.settings.rssPullOnStartup) {
       this.app.workspace.onLayoutReady(() => {
-        this.runRssPull("startup");
+        void this.runRssPull("startup");
       });
     }
   }
@@ -186,7 +186,7 @@ export default class MkImportRssPlugin extends Plugin {
     const intervalMs = minutes * 60 * 1000;
 
     this.rssScheduleId = window.setInterval(() => {
-      this.runRssPull("schedule");
+      void this.runRssPull("schedule");
     }, intervalMs);
 
     this.registerInterval(this.rssScheduleId);
@@ -335,7 +335,7 @@ export default class MkImportRssPlugin extends Plugin {
 
     const url = this.settings.rssUrl.trim();
     if (!url) {
-      const msg = "ERROR: RSS URL is empty.";
+      const msg = "RSS feed URL is empty.";
       new Notice(msg);
       await this.appendLog(msg);
       return;
@@ -354,7 +354,7 @@ export default class MkImportRssPlugin extends Plugin {
       new Notice(summary);
       await this.appendLog(summary);
     } catch (error) {
-      const msg = `ERROR: RSS pull failed. ${this.formatError(error)}`;
+      const msg = `RSS pull failed. ${this.formatError(error)}`;
       new Notice(msg);
       await this.appendLog(msg);
     } finally {
@@ -365,7 +365,7 @@ export default class MkImportRssPlugin extends Plugin {
   async runRssInbox(trigger: RunTrigger) {
     const watchFolderPath = this.normalizePath(this.settings.rssWatchFolder);
     if (!watchFolderPath) {
-      const msg = "ERROR: RSS watch folder is empty.";
+      const msg = "Inbox folder is empty.";
       new Notice(msg);
       await this.appendLog(msg);
       return;
@@ -373,7 +373,7 @@ export default class MkImportRssPlugin extends Plugin {
 
     const folder = this.app.vault.getAbstractFileByPath(watchFolderPath);
     if (!(folder instanceof TFolder)) {
-      const msg = `ERROR: RSS watch folder not found: ${watchFolderPath}`;
+      const msg = `Inbox folder not found: ${watchFolderPath}`;
       new Notice(msg);
       await this.appendLog(msg);
       return;
@@ -385,7 +385,7 @@ export default class MkImportRssPlugin extends Plugin {
     );
 
     if (xmlFiles.length === 0) {
-      const msg = "RSS inbox: no XML files found.";
+      const msg = "No XML files found in the inbox folder.";
       new Notice(msg);
       await this.appendLog(msg);
       return;
@@ -411,7 +411,7 @@ export default class MkImportRssPlugin extends Plugin {
         `errors=${stats.errors}`;
       await this.appendLog(summary);
     } catch (error) {
-      const msg = `ERROR: failed to process RSS inbox file ${file.path}. ${this.formatError(error)}`;
+      const msg = `Failed to process RSS inbox file ${file.path}. ${this.formatError(error)}`;
       new Notice(msg);
       await this.appendLog(msg);
       return;
@@ -1161,7 +1161,7 @@ export default class MkImportRssPlugin extends Plugin {
       if (dotIndex >= 0 && dotIndex < lastPart.length - 1) {
         return lastPart.slice(dotIndex + 1).toLowerCase();
       }
-    } catch (error) {
+    } catch {
       return "";
     }
 
@@ -1194,7 +1194,28 @@ export default class MkImportRssPlugin extends Plugin {
   }
 
   private stripInvalidXmlChars(xml: string): string {
-    return xml.replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, "");
+    let sanitized = "";
+
+    for (const char of xml) {
+      const codePoint = char.codePointAt(0);
+      if (codePoint !== undefined && this.isAllowedXmlCodePoint(codePoint)) {
+        sanitized += char;
+      }
+    }
+
+    return sanitized;
+  }
+
+  private isAllowedXmlCodePoint(codePoint: number): boolean {
+    if (codePoint === 0x09 || codePoint === 0x0a || codePoint === 0x0d) {
+      return true;
+    }
+
+    if (codePoint < 0x20 || codePoint === 0x7f) {
+      return false;
+    }
+
+    return true;
   }
 
   private ensureMediaNamespace(xml: string): string {
@@ -1278,7 +1299,7 @@ export default class MkImportRssPlugin extends Plugin {
   }
 
   private resolveTemplate(template: string, vars: Record<string, string>): string {
-    return template.replace(/\{(\w+)\}/g, (match, key) => {
+    return template.replace(/\{(\w+)\}/g, (_token, key) => {
       const value = vars[key];
       return value ?? "";
     });
@@ -1331,7 +1352,7 @@ class MkImportRssSettingTab extends PluginSettingTab {
     const { containerEl } = this;
     containerEl.empty();
 
-    containerEl.createEl("h2", { text: "RSS Import" });
+    new Setting(containerEl).setName("RSS import").setHeading();
 
     new Setting(containerEl)
       .setName("Log file path")
@@ -1347,26 +1368,26 @@ class MkImportRssSettingTab extends PluginSettingTab {
       );
 
     new Setting(containerEl)
-      .setName("Import RSS now")
-      .setDesc("Fetch RSS URL and import items.")
+      .setName("Import now")
+      .setDesc("Fetch the RSS feed and import items.")
       .addButton((button) => {
-        button.setButtonText("Run").onClick(() => {
-          this.plugin.runRssPull("manual");
+        button.setButtonText("Run now").onClick(() => {
+          void this.plugin.runRssPull("manual");
         });
       });
 
     new Setting(containerEl)
-      .setName("Process RSS inbox now")
-      .setDesc("Process XML files from the watch folder.")
+      .setName("Process inbox now")
+      .setDesc("Process XML files from the inbox folder.")
       .addButton((button) => {
-        button.setButtonText("Run").onClick(() => {
-          this.plugin.runRssInbox("manual");
+        button.setButtonText("Run now").onClick(() => {
+          void this.plugin.runRssInbox("manual");
         });
       });
 
     new Setting(containerEl)
-      .setName("RSS URL")
-      .setDesc("RSS feed URL (pull mode).")
+      .setName("RSS feed URL")
+      .setDesc("RSS feed URL used in pull mode.")
       .addText((text) =>
         text
           .setPlaceholder("https://example.com/rss.xml")
@@ -1392,7 +1413,7 @@ class MkImportRssSettingTab extends PluginSettingTab {
 
     new Setting(containerEl)
       .setName("Root folder")
-      .setDesc("Base folder for imported RSS notes.")
+      .setDesc("Base folder for imported notes.")
       .addText((text) =>
         text
           .setPlaceholder("000 Metaverse")
@@ -1419,7 +1440,7 @@ class MkImportRssSettingTab extends PluginSettingTab {
       );
 
     new Setting(containerEl)
-      .setName("File name template")
+      .setName("Filename template")
       .setDesc(
         "Template for file names. Tokens: {title}, {id}, {type}, {name}, {p_group}."
       )
@@ -1486,7 +1507,7 @@ class MkImportRssSettingTab extends PluginSettingTab {
       );
 
     new Setting(containerEl)
-      .setName("Images")
+      .setName("Image handling")
       .setDesc("How to handle <media:content> URLs.")
       .addDropdown((dropdown) =>
         dropdown
@@ -1529,7 +1550,7 @@ class MkImportRssSettingTab extends PluginSettingTab {
 
     new Setting(containerEl)
       .setName("Assets folder")
-      .setDesc("Used when Images = Download.")
+      .setDesc("Used when image handling is set to download to vault.")
       .addText((text) =>
         text
           .setPlaceholder("assets/rss")
@@ -1541,7 +1562,7 @@ class MkImportRssSettingTab extends PluginSettingTab {
       );
 
     new Setting(containerEl)
-      .setName("Run RSS pull on startup")
+      .setName("Run on startup")
       .setDesc("Fetch RSS once when Obsidian finishes loading.")
       .addToggle((toggle) =>
         toggle
@@ -1553,7 +1574,7 @@ class MkImportRssSettingTab extends PluginSettingTab {
       );
 
     new Setting(containerEl)
-      .setName("Enable RSS schedule")
+      .setName("Enable schedule")
       .setDesc("Fetch RSS automatically on an interval.")
       .addToggle((toggle) =>
         toggle
@@ -1566,8 +1587,8 @@ class MkImportRssSettingTab extends PluginSettingTab {
       );
 
     new Setting(containerEl)
-      .setName("RSS schedule interval (minutes)")
-      .setDesc("Minimum 1 minute.")
+      .setName("Schedule interval (minutes)")
+      .setDesc("Minimum value: 1 minute.")
       .addText((text) => {
         text.inputEl.type = "number";
         text.inputEl.min = "1";
@@ -1583,7 +1604,7 @@ class MkImportRssSettingTab extends PluginSettingTab {
       });
 
     new Setting(containerEl)
-      .setName("Watch folder")
+      .setName("Watch inbox folder")
       .setDesc("Enable automatic processing of XML files.")
       .addToggle((toggle) =>
         toggle
@@ -1595,7 +1616,7 @@ class MkImportRssSettingTab extends PluginSettingTab {
       );
 
     new Setting(containerEl)
-      .setName("RSS inbox folder")
+      .setName("Inbox folder")
       .setDesc("Folder to watch for XML files (no recursion).")
       .addText((text) =>
         text
